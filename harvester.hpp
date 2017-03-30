@@ -7,14 +7,17 @@
 
 #include "harvester_impl.hpp"
 
-template<class ExecutionPolicy>
-void extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy)
+namespace Harvester
 	{
-	auto eh=[](const char* message,void* policy)
-		{reinterpret_cast<ExecutionPolicy*>(policy)->raise(message);}
-	auto progress_cb=[](double x,void* policy)
-		{reinterpret_cast<ExecutionPolicy*>(policy)->progress(x);}
-	extract(src_file,dest_dir,eh,progress_cb);
+	template<class ExecutionPolicy>
+	Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy)
+		{
+		auto eh=[](const char* message,void* policy)
+			{reinterpret_cast<ExecutionPolicy*>(policy)->raise(message);}
+		auto progress_cb=[](double x,void* policy)
+			{reinterpret_cast<ExecutionPolicy*>(policy)->progress(x);}
+		return extract(src_file,dest_dir,eh,progress_cb);
+		}
 	}
 
 #endif
