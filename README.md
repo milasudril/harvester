@@ -34,7 +34,7 @@ An `ExecutionPolicy` must have two members
   * `raise(const char* message);`, that is called up on does not return.
   * `progress(double x)`, that is called regulary during the extraction process.
 
-The archive content is extracted to a uniqe directory inside `dest_dir`. The unique directory name is accessible through the `name` method called on the returned `Directory` object. By default, the destructor will remove the created directory. If the directory should be kept, the method `release` needs to be called before the `Directory` object goes out of scope.
+The archive content is extracted to a uniqe directory inside `dest_dir`. The unique directory name is accessible through the `name` method called on the returned `Directory` object. By default, the destructor will remove the created directory. If the directory should be kept, the method `release` needs to be called before the `Directory` object goes out of scope. Notice that `release` *does not* release the directory name from the object. Thus the caller *must not* try to deallocate the name.
 
 The "harvesting" is transactional. That is, if `extract` does not succeed, the all files are removed.
 
