@@ -6,6 +6,8 @@
 #ifndef HARVESTER_DIRECTORY_HPP
 #define HARVESTER_DIRECTORY_HPP
 
+#include <utility>
+
 namespace Harvester
 	{
 	class Directory;
@@ -27,13 +29,15 @@ namespace Harvester
 				{
 				std::swap(m_name,dir.m_name);
 				std::swap(m_name,dir.m_name);
+				return *this;
 				}
 
 			Directory(const Directory&)=delete;
 			Directory& operator=(const Directory&)=delete;
 			~Directory();
 
-			const char* name() const noexcept;
+			const char* name() const noexcept
+				{return m_name;}
 
 			const char* release() noexcept
 				{
@@ -42,7 +46,8 @@ namespace Harvester
 				}
 
 		private:
-			explicit Directory(const char* name);
+			explicit Directory(char* name):m_name(name)
+				{}
 
 			template<class ExecutionPolicy>
 			friend Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy);

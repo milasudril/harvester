@@ -16,7 +16,7 @@ namespace Harvester
 			{reinterpret_cast<ExecutionPolicy*>(policy)->raise(message);}
 		auto progress_cb=[](double x,void* policy)
 			{reinterpret_cast<ExecutionPolicy*>(policy)->progress(x);}
-		return extract(src_file,dest_dir,eh,progress_cb);
+		return extract(src_file,dest_dir,eh,progress_cb,&exec_policy);
 		}
 	}
 
