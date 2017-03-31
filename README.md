@@ -6,7 +6,7 @@ This library exposes a very high-level interface to `libarchive` for extracting 
 Basic interface
 ---------------
 
-It consists of one class, `Directory`, that manages the lifetime of the extracted files.
+It consists of one class, `Directory`, that manages the lifetime of the extracted files:
 
 	namespace Harvester
 		{
@@ -27,19 +27,19 @@ It consists of one class, `Directory`, that manages the lifetime of the extracte
 			};
 		}
 
-The archive content is extracted by the function
+It also contains a function that extracts all files in a directory.
 
 	template<class ExecutionPolicy>
     Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy);
 
 An `ExecutionPolicy` must have two members
 
-  * `raise(const char* message);`, that is called up on does not return.
+  * `raise(const char* message)`, that is called up on does not return.
   * `progress(double x)`, that is called regulary during the extraction process.
 
 The archive content is extracted to a uniqe directory inside `dest_dir`. The unique directory name is accessible through the `name` method called on the returned `Directory` object. By default, the destructor will remove the created directory. If the directory should be kept, the method `release` needs to be called before the `Directory` object goes out of scope. Notice that `release` *does not* release the directory name from the object. Thus the caller *must not* try to deallocate the name.
 
-The "harvesting" is transactional. That is, if `extract` does not succeed, the all files are removed.
+The extraction process is transactional. That is, if `extract` does not succeed, all created files are removed.
 
 
 Path validation policy
