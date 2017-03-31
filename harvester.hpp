@@ -5,6 +5,7 @@
 #ifndef HARVESTER_HPP
 #define HARVESTER_HPP
 
+#include "directory.hpp"
 #include "harvester_impl.hpp"
 
 namespace Harvester
@@ -13,9 +14,9 @@ namespace Harvester
 	Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy)
 		{
 		auto eh=[](const char* message,void* policy)
-			{reinterpret_cast<ExecutionPolicy*>(policy)->raise(message);}
+			{reinterpret_cast<ExecutionPolicy*>(policy)->raise(message);};
 		auto progress_cb=[](double x,void* policy)
-			{reinterpret_cast<ExecutionPolicy*>(policy)->progress(x);}
+			{reinterpret_cast<ExecutionPolicy*>(policy)->progress(x);};
 		return extract(src_file,dest_dir,eh,progress_cb,&exec_policy);
 		}
 	}

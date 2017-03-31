@@ -5,20 +5,40 @@
 #include "rmdir.hpp"
 #if __has_include(<filesystem>)
 #include <filesystem>
-
-namespace fs=std::filesystem;
-#elif __has_include(<experimental/filesystem>)
-
-#include <experimental/filesystem>
-
-namespace fs=std::experimental::filesystem;
-
-#else
-#error This library requires support C++17 or Filesystem TS
-#endif
-
 void Harvester::rmdir(const char* dirname) noexcept
 	{
 	std::error_code ec;
 	fs::remove_all(dirname,ec);
 	}
+#else
+
+#include "directorylister.hpp"
+#include <stack>
+#include <utility>
+#include <string>
+
+using namespace Harvester;
+
+void Harvester::rmdir(const char* dirname) noexcept
+	{
+	try
+		{
+		std::stack<std::pair<std::string,DirectoryLister>> nodes;
+		nodes.push({dirname,DirectoryLister(dirname)});
+		while(!nodes.empty())
+			{
+			auto x=std::move(nodes.top());
+			nodes.pop();
+			const char* entry;
+			while((entry=x.second.read())!=nullptr)
+				{
+				fprintf(stderr,"%s/%s\n",x.first.c_str(),entry);
+				}
+			}
+		}
+	catch(...)
+		{}
+	}
+#endif
+
+

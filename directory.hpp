@@ -19,6 +19,7 @@ namespace Harvester
 			template<class ExceptionHandler>
 			Directory(const char* name,ExceptionHandler&& eh)
 				{
+				released=0;
 				m_name=strcpy(name);
 				if(m_name==nullptr)
 					{eh("Out of memory");}
