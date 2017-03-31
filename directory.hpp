@@ -1,23 +1,29 @@
 //@ {
 //@	 "targets":[{"name":"directory.hpp","type":"include"}]
-//@	,"dependencies_extra":[{"ref":"directory.o","rel":"implementation"}]
 //@	}
 
 #ifndef HARVESTER_DIRECTORY_HPP
 #define HARVESTER_DIRECTORY_HPP
 
+#include "strcpy.hpp"
+#include "rmdir.hpp"
 #include <utility>
+#include <cstdlib>
+#include <cstring>
 
 namespace Harvester
 	{
-	class Directory;
-	
-	template<class ExecutionPolicy>
-	Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy);
-
 	class Directory
 		{
 		public:
+			template<class ExceptionHandler>
+			Directory(const char* name,ExceptionHandler&& eh)
+				{
+				m_name=strcpy(name);
+				if(m_name==nullptr)
+					{eh("Out of memory");}
+				}	
+
 			Directory(Directory&& dir) noexcept:
 				m_name(dir.m_name),released(dir.m_name)
 				{
@@ -34,21 +40,24 @@ namespace Harvester
 
 			Directory(const Directory&)=delete;
 			Directory& operator=(const Directory&)=delete;
-			~Directory();
+
+			~Directory() noexcept
+				{
+				if(m_name!=nullptr)
+					{
+					if(!released)
+						{rmdir(m_name);}
+					free(m_name);
+					}
+				}
 
 			const char* name() const noexcept
 				{return m_name;}
 
-			const char* release() noexcept
-				{
-				released=1;
-				return m_name;
-				}
+			void contentRelease() noexcept
+				{released=1;}
 
 		private:
-			explicit Directory(char* name):m_name(name)
-				{}
-
 			template<class ExecutionPolicy>
 			friend Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy);
 

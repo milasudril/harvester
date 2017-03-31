@@ -13,6 +13,9 @@ It consists of one class, `Directory`, that manages the lifetime of the extracte
 		class Directory
 			{
 			public:
+				template<class ExceptionHandler>
+				Directory(const char* dir_name,ExceptionHandler&& eh);
+
 				Directory(Directory&& dir) noexcept;
 				Directory& operator=(Directory&& dir) noexcept;
 				Directory(const Directory&)=delete;
