@@ -51,3 +51,7 @@ This library is designed to avoid messing up file systems. Therefore, any absolu
  * Begins with regex `[A-Za-z]:\\` (A drive letter)
 
 Also paths that contains a `..` element generate an exception.
+
+Example usage
+-------------
+A simple example can be found in `main.cpp`. It is a fully working program for extracting files from a file archive.
