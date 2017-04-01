@@ -12,10 +12,14 @@ void Harvester::rmdir(const char* dirname) noexcept
 	}
 #else
 
+
 #include "directorylister.hpp"
+#include "fileinfo.hpp"
 #include <stack>
 #include <utility>
 #include <string>
+#include <cstring>
+#include <cstdio>
 
 using namespace Harvester;
 
@@ -27,17 +31,36 @@ void Harvester::rmdir(const char* dirname) noexcept
 		nodes.push({dirname,DirectoryLister(dirname)});
 		while(!nodes.empty())
 			{
-			auto x=std::move(nodes.top());
-			nodes.pop();
-			const char* entry;
-			while((entry=x.second.read())!=nullptr)
+			auto& x=nodes.top();
+			
+			const char* entry=x.second.read();
+			if(entry==nullptr)
 				{
-				fprintf(stderr,"%s/%s\n",x.first.c_str(),entry);
+				remove(x.first.c_str());
+				nodes.pop();
+				}
+
+			while(entry!=nullptr)
+				{
+				std::string fullpath(x.first);
+				fullpath+='/';
+				fullpath+=entry;
+				FileInfo info(fullpath.c_str());
+				if(info.type()==FileInfo::Type::DIRECTORY)
+					{
+					if(strcmp(entry,"..") && strcmp(entry,"."))
+						{
+						nodes.push({fullpath,DirectoryLister(fullpath.c_str())});
+						}
+					}
+				else
+					{remove(fullpath.c_str());}
+				entry=x.second.read();
 				}
 			}
 		}
 	catch(...)
-		{}
+		{fprintf(stderr,"Error\n");}
 	}
 #endif
 
