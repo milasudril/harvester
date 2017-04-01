@@ -12,7 +12,6 @@ void Harvester::rmdir(const char* dirname) noexcept
 	}
 #else
 
-
 #include "directorylister.hpp"
 #include "fileinfo.hpp"
 #include <stack>

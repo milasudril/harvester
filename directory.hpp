@@ -26,7 +26,7 @@ namespace Harvester
 				}	
 
 			Directory(Directory&& dir) noexcept:
-				m_name(dir.m_name),released(dir.m_name)
+				m_name(dir.m_name),released(dir.released)
 				{
 				dir.m_name=nullptr;
 				dir.released=1;
@@ -35,7 +35,7 @@ namespace Harvester
 			Directory& operator=(Directory&& dir) noexcept
 				{
 				std::swap(m_name,dir.m_name);
-				std::swap(m_name,dir.m_name);
+				std::swap(released,dir.released);
 				return *this;
 				}
 
