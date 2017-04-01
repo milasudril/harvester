@@ -35,7 +35,7 @@ It also contains a function that extracts all files in a directory.
 An `ExecutionPolicy` must have two members
 
   * `raise(const char* message)`, that is called up error and does not return. The function *must not* throw `message` directly, since the buffer may be deallocated during stack unwinding. Instead, copy the message into a fixed-size buffer such as `std::array<char,512>` with `strncpy`, and throw that object. 
-  * `progress(double x)`, that is called regulary during the extraction process.
+  * `progress(double x, const char* name)`, that is called regulary during the extraction process.
 
 The archive content is extracted to a uniqe directory inside `dest_dir`, which must exist. The unique directory name is accessible through the `name` method called on the returned `Directory` object. By default, the destructor will remove the created directory. If the directory should be kept, the method `release` needs to be called before the `Directory` object goes out of scope. Notice that `release` *does not* release the directory name from the object. Thus the caller *must not* try to deallocate the name.
 
