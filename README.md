@@ -23,7 +23,7 @@ It consists of one class, `Directory`, that manages the lifetime of the extracte
 				~Directory();
 
 				const char* name() const noexcept;
-				const char* release() noexcept;
+				void contentRelease() noexcept;
 			};
 		}
 
