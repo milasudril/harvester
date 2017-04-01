@@ -29,7 +29,9 @@ int main(int argc,char** argv)
 		}
 	try
 		{
-		Harvester::extract(argv[1],argv[2],ExecutionPolicy{}).contentRelease();
+		auto dir=Harvester::extract(argv[1],argv[2],ExecutionPolicy{});
+		printf("Files extracted to %s\n",dir.name());
+		dir.contentRelease();
 		}
 	catch(const std::array<char,512>& msg)
 		{
