@@ -32,21 +32,23 @@ namespace Harvester
 It also contains functions that extracts files into a directory. The first one extracts all
 files accepted by the ExecutionPolicy. The other two are for cherrypicking individual files.
 
-	namespace Harvester
-		{
-		template<class ExecutionPolicy>
-		Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy);
+```C++
+namespace Harvester
+	{
+	template<class ExecutionPolicy>
+	Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy);
 
-		template<class ExecutionPolicy>
-		Directory extract(const char* src_file,const char* dest_dir
-			,ExecutionPolicy& exec_policy
-			,const char** files_begin
-			,const char** files_end);
+	template<class ExecutionPolicy>
+	Directory extract(const char* src_file,const char* dest_dir
+		,ExecutionPolicy& exec_policy
+		,const char** files_begin
+		,const char** files_end);
 
-		template<class ExecutionPolicy,class ... Args>
-		Directory extract(const char* src_file,const char* dest_dir
-			,ExecutionPolicy&& exec_policy,const char* file,Args... files);
-		}
+	template<class ExecutionPolicy,class ... Args>
+	Directory extract(const char* src_file,const char* dest_dir
+		,ExecutionPolicy&& exec_policy,const char* file,Args... files);
+	}
+```
 
 An `ExecutionPolicy` must have two members
 
