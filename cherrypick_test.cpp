@@ -23,7 +23,7 @@ struct ExecutionPolicy
 
 int main()
 	{
-	Harvester::extract("foo.tar.gx"
+	Harvester::extract("foo.tar.gz"
 		,"/tmp"
 		,ExecutionPolicy{}
 		,"foo","bar");

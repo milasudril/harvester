@@ -26,17 +26,17 @@ namespace Harvester
 		}
 
 	template<class ExecutionPolicy>
-	Directory extract_impl(const char* src_file,const char* dest_dir
+	Directory extract(const char* src_file,const char* dest_dir
 		,ExecutionPolicy& exec_policy
 		,const char** files_begin
 		,const char** files_end);
 
-	template<class ExecutionPolicy,class ... Args>
+	template<class ExecutionPolicy,class... Args>
 	Directory extract(const char* src_file,const char* dest_dir
-		,ExecutionPolicy&& exec_policy,Args... args)
+		,ExecutionPolicy&& exec_policy,const char* file,Args... files)
 		{
-		std::array<const char*,sizeof...(args)> a{args...};
-		return extract_impl(src_file,dest_dir,exec_policy,a.begin(),a.end());
+		std::array<const char*,1 + sizeof...(files)> a{file,files...};
+		return extract(src_file,dest_dir,exec_policy,a.begin(),a.end());
 		}
 
 	template<class ExecutionPolicy>
@@ -74,7 +74,7 @@ namespace Harvester
 		};
 
 	template<class ExecutionPolicy>
-	Directory extract_impl(const char* src_file,const char* dest_dir
+	Directory extract(const char* src_file,const char* dest_dir
 		,ExecutionPolicy& exec_policy
 		,const char** files_begin
 		,const char** files_end)
