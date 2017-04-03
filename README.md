@@ -8,6 +8,7 @@ Basic interface
 
 It consists of one class, `Directory`, that manages the lifetime of the extracted files:
 
+	```C++
 	namespace Harvester
 		{
 		class Directory
@@ -49,7 +50,7 @@ An `ExecutionPolicy` must have two members
   * `void raise(const char* message)`, that is called up error and does not return. The function *must not* throw `message` directly, since the buffer may be deallocated during stack unwinding. Instead, copy the message into a fixed-size buffer such as `std::array<char,512>` with `strncpy`, and throw that object. 
   * `ProgressStatus progress(double x, const char* name)`, that is for each file during the extraction process. It may return one of `ProgressStatus::`
     - `SKIP`: Do not extract this file
-    - `EXTRACT`: Extract this file)
+    - `EXTRACT`: Extract this file
     - `STOP`: Do not process any more files, including the current file
 
 The archive content is extracted to a uniqe directory inside `dest_dir`, which must exist. The unique directory name is accessible through the `name` method called on the returned `Directory` object. By default, the destructor will remove the created directory. If the directory should be kept, the method `release` needs to be called before the `Directory` object goes out of scope. Notice that `release` *does not* release the directory name from the object. Thus the caller *must not* try to deallocate the name.
