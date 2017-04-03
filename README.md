@@ -8,41 +8,45 @@ Basic interface
 
 It consists of one class, `Directory`, that manages the lifetime of the extracted files:
 
-	namespace Harvester
+```C++
+namespace Harvester
+	{
+	class Directory
 		{
-		class Directory
-			{
-			public:
-				template<class ExceptionHandler>
-				Directory(const char* dir_name,ExceptionHandler&& eh);
+		public:
+			template<class ExceptionHandler>
+			Directory(const char* dir_name,ExceptionHandler&& eh);
 
-				Directory(Directory&& dir) noexcept;
-				Directory& operator=(Directory&& dir) noexcept;
-				Directory(const Directory&)=delete;
-				Directory& operator=(const Directory&)=delete;
-				~Directory();
+			Directory(Directory&& dir) noexcept;
+			Directory& operator=(Directory&& dir) noexcept;
+			Directory(const Directory&)=delete;
+			Directory& operator=(const Directory&)=delete;
+			~Directory();
 
-				const char* name() const noexcept;
-				void contentRelease() noexcept;
-			};
-		}
+			const char* name() const noexcept;
+			void contentRelease() noexcept;
+		};
+	}
+```
 
 It also contains functions that extracts files into a directory. The first one extracts all
 files accepted by the ExecutionPolicy. The other two are for cherrypicking individual files.
 
-	template<class ExecutionPolicy>
-    Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy);
+	namespace Harvester
+		{
+		template<class ExecutionPolicy>
+		Directory extract(const char* src_file,const char* dest_dir,ExecutionPolicy&& exec_policy);
 
-	template<class ExecutionPolicy>
-	Directory extract(const char* src_file,const char* dest_dir
-		,ExecutionPolicy& exec_policy
-		,const char** files_begin
-		,const char** files_end);
+		template<class ExecutionPolicy>
+		Directory extract(const char* src_file,const char* dest_dir
+			,ExecutionPolicy& exec_policy
+			,const char** files_begin
+			,const char** files_end);
 
-	template<class ExecutionPolicy,class ... Args>
-	Directory extract(const char* src_file,const char* dest_dir
-		,ExecutionPolicy&& exec_policy,const char* file,Args... files);
-
+		template<class ExecutionPolicy,class ... Args>
+		Directory extract(const char* src_file,const char* dest_dir
+			,ExecutionPolicy&& exec_policy,const char* file,Args... files);
+		}
 
 An `ExecutionPolicy` must have two members
 
