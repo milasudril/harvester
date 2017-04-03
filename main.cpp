@@ -14,10 +14,10 @@ struct ExecutionPolicy
 		throw msg;
 		}
 
-	bool progress(double x,const char* file) noexcept
+	Harvester::ProgressStatus progress(double x,const char* file) noexcept
 		{
 		printf("[%d%%] Extracting %s\n",static_cast<int>(100*x),file);
-		return 1;
+		return Harvester::ProgressStatus::EXTRACT;
 		}
 	};
 

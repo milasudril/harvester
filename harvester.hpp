@@ -10,6 +10,8 @@
 #include <array>
 #include <algorithm>
 #include <cstring>
+#include <cstdint>
+#include <cstddef>
 
 namespace Harvester
 	{
@@ -43,15 +45,20 @@ namespace Harvester
 		public:
 			ExecPolicyWrapper(const char** files_begin,const char** files_end
 				,ExecutionPolicy&& ep):m_files_begin(files_begin)
-					,m_files_end(files_end),m_exec_policy(std::move(ep))
+					,m_files_end(files_end),m_exec_policy(std::move(ep)),hitcount(0)
 				{std::sort(m_files_begin,m_files_end,cmp);}
 
-			bool progress(double x,const char* file)
+			ProgressStatus progress(double x,const char* file)
 				{
+				if(hitcount==m_files_end - m_files_begin)
+					{return ProgressStatus::STOP;}
 				auto i=std::lower_bound(m_files_begin,m_files_end,file,cmp);
 				if (i!=m_files_end && !cmp(file,*i))
-					{return m_exec_policy.progress(x,file);}
-				return 0;
+					{
+					++hitcount;
+					return m_exec_policy.progress(x,file);
+					}
+				return ProgressStatus::SKIP;
 				}
 
 			void raise(const char* message)
@@ -61,6 +68,7 @@ namespace Harvester
 			const char** m_files_begin;
 			const char** m_files_end;
 			ExecutionPolicy m_exec_policy;
+			ptrdiff_t hitcount;
 			static bool cmp(const char* a,const char* b)
 				{return strcmp(a,b)<0;};
 		};
