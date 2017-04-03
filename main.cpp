@@ -14,9 +14,10 @@ struct ExecutionPolicy
 		throw msg;
 		}
 
-	void progress(double x,const char* file) noexcept
+	bool progress(double x,const char* file) noexcept
 		{
 		printf("[%d%%] Extracting %s\n",static_cast<int>(100*x),file);
+		return 1;
 		}
 	};
 

@@ -84,7 +84,7 @@ static int data_copy(archive* ar,archive* aw) noexcept
 		}
 	}
 
-Directory Harvester::extract(const char* src_file,const char* dest_dir
+Directory Harvester::extract_impl(const char* src_file,const char* dest_dir
 	,ExceptionHandler eh,ProgressCallback cb,void* exec_policy)
 	{
 	ArchiveHandle a(archive_read_new());
@@ -142,20 +142,21 @@ Directory Harvester::extract(const char* src_file,const char* dest_dir
 			{eh("The given archive contains an absolute path",exec_policy);}
 
 		auto pos=static_cast<uint64_t>( archive_filter_bytes(handle,-1) );
-		cb(static_cast<uint64_t>(pos)/input_size,path,exec_policy);
-		
-		std::string path_out(dest_dir_full);
-		path_out+='/';
-		path_out+=path;
-		archive_entry_set_pathname(entry,path_out.c_str());
-		status=archive_write_header(handle_out,entry);
-		if(status!=ARCHIVE_OK)
-			{eh("Archive contains an invalid entry",exec_policy);}
-		if(archive_entry_size(entry) > 0)
+		if( cb(pos/input_size,path,exec_policy) )
 			{
-			status=data_copy(handle,handle_out);
+			std::string path_out(dest_dir_full);
+			path_out+='/';
+			path_out+=path;
+			archive_entry_set_pathname(entry,path_out.c_str());
+			status=archive_write_header(handle_out,entry);
 			if(status!=ARCHIVE_OK)
-				{eh(archive_error_string(handle),exec_policy);}
+				{eh("Archive contains an invalid entry",exec_policy);}
+			if(archive_entry_size(entry) > 0)
+				{
+				status=data_copy(handle,handle_out);
+				if(status!=ARCHIVE_OK)
+					{eh(archive_error_string(handle),exec_policy);}
+				}
 			}
 		}
 	}
