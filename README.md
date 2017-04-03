@@ -8,7 +8,6 @@ Basic interface
 
 It consists of one class, `Directory`, that manages the lifetime of the extracted files:
 
-	```c++
 	namespace Harvester
 		{
 		class Directory
